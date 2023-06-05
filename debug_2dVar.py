@@ -72,12 +72,14 @@ menu_options_type_2 = {
 }
 
 list_choice_figure = ['f', 'r', 'n', 'o', 'p']
+
+list_choice_view = ['fortran', 'geographic']
 # -------------------------------------------------------------------------------------
 
 
 # -------------------------------------------------------------------------------------
 # Script Main
-def main():
+def main(file_view='fortran'):
 
     # -------------------------------------------------------------------------------------
     # algorithm information
@@ -150,10 +152,13 @@ def main():
             if debug_option in sorted(list_choice_figure):  # choices to collect and plot datasets
 
                 if os.path.exists(file_path_data_tag):
-                    file_var_data, file_rows_2d, file_cols_2d = get_file_data(file_path_data_tag)
+                    file_var_data, file_rows_2d, file_cols_2d = get_file_data(
+                        file_path_data_tag, file_view=file_view)
                     file_var_stats = compute_var_data(file_var_data)
-                    file_var_info = organize_var_info(file_id, file_time=now_date_str, file_stats=file_var_stats)
-                    file_var_figure = create_figure(file_var_data, figure_title=file_var_info, figure_cmap=None)
+                    file_var_info = organize_var_info(
+                        file_id, file_time=now_date_str, file_stats=file_var_stats)
+                    file_var_figure = create_figure(
+                        file_var_data, figure_title=file_var_info, figure_cmap=None)
                     show_figure(file_var_figure)
 
                     file_dict_data_tag[file_id] = file_var_data
@@ -427,7 +432,8 @@ def get_file_data(file_name, file_delimiter=',', file_header=None, file_no_data=
 
     file_columns = [file_name_idx_rows, file_name_idx_cols, file_name_data]
 
-    file_dframe =
+    file_dframe = pd.read_table(
+        file_name, delimiter=file_delimiter, header=file_header, names=file_columns)
 
     file_cols_n = int(np.nanmax(file_dframe[file_name_idx_cols].values))
     file_rows_n = int(np.nanmax(file_dframe[file_name_idx_rows].values))
@@ -451,8 +457,9 @@ def get_file_data(file_name, file_delimiter=',', file_header=None, file_no_data=
         file_cols_2d = np.flipud(np.transpose(file_cols_2d))
 
     else:
+        file_views = ','.join(list_choice_view)
         logging.error(' ===> File view "' + file_view + '" is not supported')
-        raise NotImplementedError('File view name is not allowed')
+        raise NotImplementedError('File view name is not allowed. Supported views are: "' + str(file_views) + '"')
 
     # debug
     # plt.figure()
