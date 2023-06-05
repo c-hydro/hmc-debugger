@@ -427,8 +427,7 @@ def get_file_data(file_name, file_delimiter=',', file_header=None, file_no_data=
 
     file_columns = [file_name_idx_rows, file_name_idx_cols, file_name_data]
 
-    file_dframe = pd.read_table(
-        file_name, delimiter=file_delimiter, header=file_header, names=file_columns)
+    file_dframe =
 
     file_cols_n = int(np.nanmax(file_dframe[file_name_idx_cols].values))
     file_rows_n = int(np.nanmax(file_dframe[file_name_idx_rows].values))
